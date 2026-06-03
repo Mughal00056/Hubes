@@ -7,6 +7,7 @@ import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { Sparkles, Send, ShieldCheck, HelpCircle, FileText, Heart } from 'lucide-react';
 import { useAppState } from '../../store/StateContext';
+import { CATEGORIES } from '../../data/products';
 
 export const Footer: React.FC = () => {
   const { addNotification } = useAppState();
@@ -95,6 +96,24 @@ export const Footer: React.FC = () => {
             </form>
           </div>
 
+        </div>
+
+        {/* Categories Line Wise list */}
+        <div className="py-4 my-2 border-t border-b border-white/5 text-[11px] text-slate-500 overflow-x-auto scrollbar-none whitespace-nowrap">
+          <div className="flex items-center gap-2 sm:gap-4 md:justify-center">
+            <span className="font-semibold text-slate-300 uppercase tracking-widest text-[9px]">Direct Channels:</span>
+            {CATEGORIES.map((cat, idx) => (
+              <React.Fragment key={cat.id}>
+                {idx > 0 && <span className="text-white/10 select-none">|</span>}
+                <Link
+                  to={`/marketplace?cat=${cat.id}`}
+                  className="hover:text-white transition-colors cursor-pointer text-slate-400"
+                >
+                  {cat.name}
+                </Link>
+              </React.Fragment>
+            ))}
+          </div>
         </div>
 
         {/* Footer Bottom elements */}

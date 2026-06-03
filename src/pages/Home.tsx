@@ -139,19 +139,20 @@ export const Home: React.FC<HomeProps> = ({ onQuickView }) => {
               {heroSlides[activeSlide].description}
             </p>
 
-            <div className="pt-2 flex items-center gap-4">
-              <button
-                onClick={() => {
-                  const prod = products.find(p => p.id === heroSlides[activeSlide].productId);
-                  if (prod) onQuickView(prod);
-                }}
-                className="px-5 py-2.5 rounded-xl bg-gradient-to-r from-brand-purple to-brand-cyan text-xs font-bold uppercase tracking-wider hover:opacity-95 shadow-lg shadow-purple-500/20 flex items-center gap-2 cursor-pointer text-white border-none"
-              >
-                Inspect Asset <ArrowRight className="w-4 h-4" />
-              </button>
-              <span className="font-mono font-bold text-lg text-slate-300">
-                Starting at {heroSlides[activeSlide].price}
-              </span>
+            {/* Quick channels browsing line wise */}
+            <div className="pt-3 border-t border-white/5 space-y-1.5">
+              <span className="block text-[10px] font-mono tracking-wider text-slate-500 uppercase">Browse categories:</span>
+              <div className="flex flex-wrap items-center gap-2">
+                {CATEGORIES.map((cat, idx) => (
+                  <button
+                    key={cat.id}
+                    onClick={() => navigate(`/marketplace?cat=${cat.id}`)}
+                    className="px-2.5 py-1 rounded-lg border border-white/5 hover:border-brand-purple/40 bg-slate-950/40 text-[11px] font-medium text-slate-400 hover:text-white transition-all cursor-pointer whitespace-nowrap"
+                  >
+                    {cat.name}
+                  </button>
+                ))}
+              </div>
             </div>
           </div>
 

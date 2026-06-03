@@ -87,7 +87,7 @@ export const Checkout: React.FC = () => {
     const simulatedOrderCode = `ORD-${Math.random().toString(36).substring(2, 6).toUpperCase()}-${Math.random().toString(36).substring(3, 7).toUpperCase()}`;
 
     return (
-      <div className="relative overflow-hidden bg-slate-950 min-h-screen text-slate-100 py-16 px-4 sm:px-6 lg:px-8 flex items-center justify-center">
+      <div className="relative overflow-hidden bg-slate-950 text-slate-100 py-8 sm:py-12 px-4 sm:px-6 lg:px-8 flex items-center justify-center">
         
         {/* Background cosmic glow */}
         <div className="absolute top-1/4 left-1/3 w-96 h-96 bg-brand-purple/20 rounded-full blur-3xl pointer-events-none animate-pulse" />

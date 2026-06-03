@@ -11,6 +11,7 @@ import {
   ChevronDown, CreditCard, Plus, HelpCircle, Check, Sparkles, MessageSquare
 } from 'lucide-react';
 import { useAppState } from '../../store/StateContext';
+import { CATEGORIES } from '../../data/products';
 
 interface NavbarProps {
   onOpenCart: () => void;
@@ -356,6 +357,24 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenCart }) => {
             </motion.div>
           )}
         </AnimatePresence>
+
+        {/* Categories Line Wise Subbar */}
+        <div className="border-t border-white/5 bg-slate-950 py-2.5 overflow-x-auto scrollbar-none whitespace-nowrap">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex items-center justify-start md:justify-center gap-4 sm:gap-6 text-[10px] sm:text-xs">
+            <span className="font-mono font-bold text-slate-500 uppercase tracking-wider text-[9px] select-none">Channels:</span>
+            {CATEGORIES.map((cat, idx) => (
+              <React.Fragment key={cat.id}>
+                {idx > 0 && <span className="text-white/10 select-none">|</span>}
+                <Link
+                  to={`/marketplace?cat=${cat.id}`}
+                  className="text-slate-400 hover:text-brand-purple transition-colors font-medium tracking-normal"
+                >
+                  {cat.name}
+                </Link>
+              </React.Fragment>
+            ))}
+          </div>
+        </div>
       </header>
 
       {/* Wallet Add Funds Quick Dialog Modal */}

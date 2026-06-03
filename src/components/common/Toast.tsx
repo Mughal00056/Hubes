@@ -66,7 +66,7 @@ export const Toast: React.FC = () => {
           initial={{ opacity: 0, y: 30, scale: 0.95 }}
           animate={{ opacity: 1, y: 0, scale: 1 }}
           exit={{ opacity: 0, y: 20, scale: 0.95 }}
-          className={`flex items-start gap-3 p-4 rounded-xl border glass-panel shadow-2xl ${getBorderColor()}`}
+          className={`flex items-start gap-3 p-4 rounded-xl border bg-slate-900 shadow-2xl ${getBorderColor()}`}
         >
           <div className="flex-shrink-0 mt-0.5">
             {getIcon()}
