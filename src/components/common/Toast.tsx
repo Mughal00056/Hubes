@@ -60,13 +60,13 @@ export const Toast: React.FC = () => {
   };
 
   return (
-    <div className="fixed bottom-6 right-6 z-50 max-w-sm w-full px-4 sm:px-0">
+    <div className="fixed bottom-4 left-4 right-4 sm:bottom-6 sm:right-6 sm:left-auto z-50 max-w-md sm:max-w-sm">
       <AnimatePresence>
         <motion.div
           initial={{ opacity: 0, y: 30, scale: 0.95 }}
           animate={{ opacity: 1, y: 0, scale: 1 }}
           exit={{ opacity: 0, y: 20, scale: 0.95 }}
-          className={`flex items-start gap-3 p-4 rounded-xl border bg-slate-900 shadow-2xl ${getBorderColor()}`}
+          className={`flex items-start gap-3 p-4 rounded-xl border bg-slate-950 shadow-2xl relative ${getBorderColor()}`}
         >
           <div className="flex-shrink-0 mt-0.5">
             {getIcon()}
