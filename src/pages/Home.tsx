@@ -8,12 +8,24 @@ import { useNavigate, Link } from 'react-router-dom';
 import { motion, AnimatePresence } from 'motion/react';
 import {
   Sparkles, ArrowRight, Star, ShoppingBag, ShieldCheck, Download, Users, Lightbulb,
-  Heart, Flame, ArrowLeft, Send
+  Heart, Flame, ArrowLeft, Send, Layout, Palette, Component, Music, Type, Cpu
 } from 'lucide-react';
 import { useAppState } from '../store/StateContext';
 import { CATEGORIES, TESTIMONIALS } from '../data/products';
 import { ProductCard } from '../components/product/ProductCard';
 import { Product } from '../types';
+
+const getCategoryIcon = (iconName: string) => {
+  switch (iconName) {
+    case 'Layout': return <Layout className="w-5 h-5 text-brand-purple group-hover:text-brand-cyan transition-colors" />;
+    case 'Palette': return <Palette className="w-5 h-5 text-brand-purple group-hover:text-brand-cyan transition-colors" />;
+    case 'Component': return <Component className="w-5 h-5 text-brand-purple group-hover:text-brand-cyan transition-colors" />;
+    case 'Music': return <Music className="w-5 h-5 text-brand-purple group-hover:text-brand-cyan transition-colors" />;
+    case 'Type': return <Type className="w-5 h-5 text-brand-purple group-hover:text-brand-cyan transition-colors" />;
+    case 'Cpu': return <Cpu className="w-5 h-5 text-brand-purple group-hover:text-brand-cyan transition-colors" />;
+    default: return <Lightbulb className="w-5 h-5 text-brand-purple group-hover:text-brand-cyan transition-colors" />;
+  }
+};
 
 interface HomeProps {
   onQuickView: (product: Product) => void;
@@ -128,12 +140,15 @@ export const Home: React.FC<HomeProps> = ({ onQuickView }) => {
             </p>
 
             <div className="pt-2 flex items-center gap-4">
-              <Link
-                to={`/product/${heroSlides[activeSlide].productId}`}
-                className="px-5 py-2.5 rounded-xl bg-gradient-to-r from-brand-purple to-brand-cyan text-xs font-bold uppercase tracking-wider hover:opacity-95 shadow-lg shadow-purple-500/20 flex items-center gap-2 cursor-pointer text-white"
+              <button
+                onClick={() => {
+                  const prod = products.find(p => p.id === heroSlides[activeSlide].productId);
+                  if (prod) onQuickView(prod);
+                }}
+                className="px-5 py-2.5 rounded-xl bg-gradient-to-r from-brand-purple to-brand-cyan text-xs font-bold uppercase tracking-wider hover:opacity-95 shadow-lg shadow-purple-500/20 flex items-center gap-2 cursor-pointer text-white border-none"
               >
                 Inspect Asset <ArrowRight className="w-4 h-4" />
-              </Link>
+              </button>
               <span className="font-mono font-bold text-lg text-slate-300">
                 Starting at {heroSlides[activeSlide].price}
               </span>
@@ -157,44 +172,10 @@ export const Home: React.FC<HomeProps> = ({ onQuickView }) => {
         </div>
       </section>
 
-      {/* Highlights stat metrics row */}
-      <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
-        <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 border border-white/8 rounded-2xl p-6 bg-slate-900/10 backdrop-blur-sm">
-          <div className="flex items-center gap-3.5">
-            <div className="p-3 rounded-xl bg-purple-500/10 border border-purple-500/20 text-brand-purple">
-              <Download className="w-5 h-5" />
-            </div>
-            <div>
-              <h4 className="font-bold text-slate-200 text-sm">Instant Delivery</h4>
-              <p className="text-xs text-slate-500">File compilation immediately mapped.</p>
-            </div>
-          </div>
-          <div className="flex items-center gap-3.5 border-t sm:border-t-0 sm:border-l border-white/5 pt-4 sm:pt-0 sm:pl-6">
-            <div className="p-3 rounded-xl bg-cyan-500/10 border border-cyan-500/20 text-brand-cyan">
-              <ShieldCheck className="w-5 h-5" />
-            </div>
-            <div>
-              <h4 className="font-bold text-slate-200 text-sm">Secure Licensing</h4>
-              <p className="text-xs text-slate-500">Commercial projects safe integration.</p>
-            </div>
-          </div>
-          <div className="flex items-center gap-3.5 border-t sm:border-t-0 sm:border-l border-white/5 pt-4 sm:pt-0 sm:pl-6">
-            <div className="p-3 rounded-xl bg-emerald-500/10 border border-emerald-500/20 text-emerald-400">
-              <Users className="w-5 h-5" />
-            </div>
-            <div>
-              <h4 className="font-bold text-slate-200 text-sm">Dedicated Authors</h4>
-              <p className="text-xs text-slate-500">Verified creators with direct support.</p>
-            </div>
-          </div>
-        </div>
-      </section>
-
       {/* Grid of categories list quick access */}
       <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 space-y-6">
         <div className="flex flex-col sm:flex-row items-start sm:items-end justify-between gap-2">
           <div>
-            <span className="text-[10px] uppercase tracking-wider font-bold text-brand-purple">CURATED COLLECTIONS</span>
             <h2 className="font-display font-bold text-2xl sm:text-3xl text-white tracking-tight">Browse by Creative Category</h2>
           </div>
           <Link
@@ -205,20 +186,20 @@ export const Home: React.FC<HomeProps> = ({ onQuickView }) => {
           </Link>
         </div>
 
-        <div className="grid grid-cols-2 md:grid-cols-6 gap-3">
+        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-6 gap-6 pt-4">
           {CATEGORIES.map((cat) => (
             <div
               key={cat.id}
               onClick={() => navigate(`/marketplace?cat=${cat.id}`)}
-              className="group p-4 rounded-xl border border-white/8 bg-slate-900/25 text-center flex flex-col items-center justify-center gap-3 hover:border-brand-purple/40 hover:bg-slate-900/50 transition-all duration-300 cursor-pointer"
+              className="group flex flex-col items-center gap-3 cursor-pointer select-none"
             >
-              <div className="w-10 h-10 rounded-lg bg-gradient-to-tr from-brand-purple/20 to-brand-cyan/20 border border-white/10 flex items-center justify-center group-hover:scale-105 transition-transform duration-200">
-                <Lightbulb className="w-4 h-4 text-brand-purple group-hover:text-brand-cyan transition-colors" />
+              <div className="w-24 h-24 sm:w-28 sm:h-28 rounded-full border border-white/8 bg-slate-900/20 flex flex-col items-center justify-center gap-1.5 hover:border-brand-purple/40 hover:bg-slate-900/60 shadow-inner group-hover:shadow-brand-purple/5 transition-all duration-300 transform group-hover:scale-105">
+                <div className="w-12 h-12 rounded-full bg-gradient-to-tr from-brand-purple/20 to-brand-cyan/20 border border-white/8 flex items-center justify-center">
+                  {getCategoryIcon(cat.icon)}
+                </div>
+                <span className="text-[10px] text-slate-500 font-mono tracking-wide group-hover:text-slate-400 transition-colors uppercase">{cat.count} files</span>
               </div>
-              <div>
-                <h4 className="font-semibold text-slate-200 text-xs group-hover:text-white transition-colors">{cat.name}</h4>
-                <p className="text-[10px] text-slate-500 mt-1">{cat.count} files</p>
-              </div>
+              <h4 className="font-semibold text-slate-300 text-xs text-center group-hover:text-white transition-colors max-w-[110px] leading-tight">{cat.name}</h4>
             </div>
           ))}
         </div>

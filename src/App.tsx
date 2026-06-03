@@ -17,7 +17,6 @@ import { QuickViewModal } from './components/product/QuickViewModal';
 // Pages
 import { Home } from './pages/Home';
 import { Marketplace } from './pages/Marketplace';
-import { ProductDetails } from './pages/ProductDetails';
 import { Wishlist } from './pages/Wishlist';
 import { Checkout } from './pages/Checkout';
 import { Purchases } from './pages/Purchases';
@@ -49,10 +48,9 @@ function AppLayout() {
         <Routes>
           <Route path="/" element={<Home onQuickView={handleQuickView} />} />
           <Route path="/marketplace" element={<Marketplace onQuickView={handleQuickView} />} />
-          <Route path="/product/:id" element={<ProductDetails />} />
-          <Route path="/wishlist" element={<Wishlist />} />
+          <Route path="/wishlist" element={<Wishlist onQuickView={handleQuickView} />} />
           <Route path="/checkout" element={<Checkout />} />
-          <Route path="/purchases" element={<Purchases />} />
+          <Route path="/purchases" element={<Purchases onQuickView={handleQuickView} />} />
           <Route path="/dashboard" element={<Dashboard />} />
           <Route path="/auth" element={<Auth />} />
         </Routes>

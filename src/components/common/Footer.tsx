@@ -46,7 +46,7 @@ export const Footer: React.FC = () => {
             <div className="flex gap-4 text-xs font-semibold text-slate-500">
               <span>Secure Transactions</span>
               <span>•</span>
-              <span>Instant Delivery</span>
+              <span>Direct Downloads</span>
             </div>
           </div>
 

@@ -124,12 +124,15 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product, onQuickView }
 
         {/* Title and description */}
         <div className="space-y-1 flex-grow">
-          <Link
-            to={`/product/${product.id}`}
-            className="block text-slate-200 dark:text-slate-200 light:text-slate-900 font-semibold font-display text-sm group-hover:text-brand-purple transition-colors line-clamp-1 cursor-pointer"
+          <button
+            onClick={(e) => {
+              e.preventDefault();
+              onQuickView(product);
+            }}
+            className="block text-left w-full bg-transparent border-0 p-0 focus:outline-none text-slate-200 dark:text-slate-200 light:text-slate-900 font-semibold font-display text-sm group-hover:text-brand-purple transition-colors line-clamp-1 cursor-pointer"
           >
             {product.title}
-          </Link>
+          </button>
           <p className="text-slate-400 text-xs line-clamp-2 leading-relaxed">
             {product.description}
           </p>

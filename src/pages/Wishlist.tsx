@@ -9,7 +9,11 @@ import { motion, AnimatePresence } from 'motion/react';
 import { Heart, Trash2, ShoppingCart, ArrowRight, Eye, Sparkles } from 'lucide-react';
 import { useAppState } from '../store/StateContext';
 
-export const Wishlist: React.FC = () => {
+export interface WishlistProps {
+  onQuickView: (product: any) => void;
+}
+
+export const Wishlist: React.FC<WishlistProps> = ({ onQuickView }) => {
   const { wishlist, products, toggleWishlist, addToCart, isInCart } = useAppState();
 
   // Find actual products in saved list
@@ -84,12 +88,12 @@ export const Wishlist: React.FC = () => {
                           referrerPolicy="no-referrer"
                         />
                         <div className="min-w-0">
-                          <Link
-                            to={`/product/${item.id}`}
-                            className="font-display font-semibold text-slate-200 hover:text-brand-purple transition-colors text-sm sm:text-base cursor-pointer line-clamp-1"
+                          <button
+                            onClick={() => onQuickView(item)}
+                            className="font-display font-semibold text-slate-200 hover:text-brand-purple transition-colors text-sm sm:text-base cursor-pointer line-clamp-1 text-left bg-transparent border-0 p-0 focus:outline-none"
                           >
                             {item.title}
-                          </Link>
+                          </button>
                           
                           <div className="flex items-center gap-2 text-[10px] text-slate-500 mt-1 uppercase tracking-wider font-mono">
                             <span className="text-brand-purple font-semibold">{item.category.replace('-', ' ')}</span>
@@ -124,13 +128,13 @@ export const Wishlist: React.FC = () => {
                             <Trash2 className="w-4 h-4" />
                           </button>
 
-                          <Link
-                            to={`/product/${item.id}`}
-                            className="p-2 sm:p-2.5 rounded-xl border border-white/10 hover:border-white/20 text-slate-400 hover:text-white hover:bg-slate-900 transition-colors cursor-pointer"
+                          <button
+                            onClick={() => onQuickView(item)}
+                            className="p-2 sm:p-2.5 rounded-xl border border-white/10 hover:border-white/20 text-slate-400 hover:text-white hover:bg-slate-900 transition-colors cursor-pointer bg-transparent"
                             title="Inspect Details"
                           >
                             <Eye className="w-4 h-4" />
-                          </Link>
+                          </button>
 
                           <button
                             onClick={() => handleMoveToCart(item)}

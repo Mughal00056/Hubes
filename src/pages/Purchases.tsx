@@ -11,8 +11,12 @@ import {
 } from 'lucide-react';
 import { useAppState } from '../store/StateContext';
 
-export const Purchases: React.FC = () => {
-  const { purchases, addNotification } = useAppState();
+export interface PurchasesProps {
+  onQuickView: (product: any) => void;
+}
+
+export const Purchases: React.FC<PurchasesProps> = ({ onQuickView }) => {
+  const { purchases, products, addNotification } = useAppState();
   const [searchTerm, setSearchTerm] = useState('');
   const [copiedKey, setCopiedKey] = useState<string | null>(null);
   const [downloadingId, setDownloadingId] = useState<string | null>(null);
@@ -121,12 +125,15 @@ export const Purchases: React.FC = () => {
                         referrerPolicy="no-referrer"
                       />
                       <div className="min-w-0 flex-grow">
-                        <Link
-                          to={`/product/${item.id}`}
-                          className="font-display font-semibold text-slate-100 hover:text-brand-purple transition-colors text-xs sm:text-sm line-clamp-1 cursor-pointer"
+                        <button
+                          onClick={() => {
+                            const prod = products?.find(p => p.id === item.id);
+                            if (prod) onQuickView(prod);
+                          }}
+                          className="font-display font-semibold text-slate-100 hover:text-brand-purple transition-colors text-xs sm:text-sm line-clamp-1 cursor-pointer text-left bg-transparent border-0 p-0 focus:outline-none"
                         >
                           {item.title}
-                        </Link>
+                        </button>
                         <div className="flex items-center gap-1.5 text-[10px] text-slate-500 mt-1 uppercase font-mono truncate">
                           <span className="text-brand-purple font-semibold">{item.category}</span>
                           <span>•</span>
