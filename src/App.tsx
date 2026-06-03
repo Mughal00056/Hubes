@@ -5,6 +5,7 @@
 
 import React, { useState } from 'react';
 import { HashRouter, Routes, Route, useLocation } from 'react-router-dom';
+import { AnimatePresence } from 'motion/react';
 import { StateProvider, useAppState } from './store/StateContext';
 
 // Common Components
@@ -13,6 +14,7 @@ import { Footer } from './components/common/Footer';
 import { Toast } from './components/common/Toast';
 import { CartDrawer } from './components/cart/CartDrawer';
 import { QuickViewModal } from './components/product/QuickViewModal';
+import { SplashScreen } from './components/common/SplashScreen';
 
 // Pages
 import { Home } from './pages/Home';
@@ -32,6 +34,23 @@ function AppLayout() {
   const location = useLocation();
   const [isCartOpen, setIsCartOpen] = useState(false);
   const [selectedQuickViewProduct, setSelectedQuickViewProduct] = useState<Product | null>(null);
+  const [showSplash, setShowSplash] = useState(() => {
+    // Check if the splash was already shown in the current tab session
+    try {
+      return !sessionStorage.getItem('nebula_splash_shown');
+    } catch (e) {
+      return true; // Fallback to always show if sessionStorage is locked
+    }
+  });
+
+  const handleSplashComplete = () => {
+    try {
+      sessionStorage.setItem('nebula_splash_shown', 'true');
+    } catch (e) {
+      // Ignore sessionStorage locked bounds
+    }
+    setShowSplash(false);
+  };
 
   const handleQuickView = (prod: Product) => {
     setSelectedQuickViewProduct(prod);
@@ -41,7 +60,12 @@ function AppLayout() {
   const isMinimalLayout = location.pathname === '/auth';
 
   return (
-    <div className={`min-h-screen flex flex-col font-sans transition-colors duration-200 ${theme === 'dark' ? 'bg-slate-950 text-slate-100 dark' : 'bg-slate-50 text-slate-800'}`}>
+    <>
+      <AnimatePresence mode="wait">
+        {showSplash && <SplashScreen onComplete={handleSplashComplete} />}
+      </AnimatePresence>
+
+      <div className={`min-h-screen flex flex-col font-sans transition-colors duration-200 ${theme === 'dark' ? 'bg-slate-950 text-slate-100 dark' : 'bg-slate-50 text-slate-800'}`}>
       
       {!isMinimalLayout && <Navbar onOpenCart={() => setIsCartOpen(true)} />}
 
@@ -73,6 +97,7 @@ function AppLayout() {
       />
 
     </div>
+    </>
   );
 }
 

@@ -35,6 +35,7 @@ interface StateContextType {
   clearAllNotifications: () => void;
   submitProductReview: (productId: string, rating: number, comment: string) => void;
   addFunds: (amount: number) => void;
+  addCustomProduct: (product: Product) => void;
 }
 
 const StateContext = createContext<StateContextType | undefined>(undefined);
@@ -77,6 +78,17 @@ const defaultNotifications: AppNotification[] = [
 ];
 
 export const StateProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+  // Dynamic Products state (supports core items + customized custom ones)
+  const [productsList, setProductsList] = useState<Product[]>(() => {
+    try {
+      const saved = localStorage.getItem('cosmic_marketplace_custom_products');
+      const custom = saved ? JSON.parse(saved) : [];
+      return [...PRODUCTS, ...custom];
+    } catch (e) {
+      return PRODUCTS;
+    }
+  });
+
   // Theme logic
   const [theme, setTheme] = useState<'dark' | 'light'>(() => {
     const saved = localStorage.getItem('cosmic_marketplace_theme');
@@ -174,6 +186,11 @@ export const StateProvider: React.FC<{ children: React.ReactNode }> = ({ childre
   useEffect(() => {
     localStorage.setItem('cosmic_marketplace_reviews', JSON.stringify(productReviews));
   }, [productReviews]);
+
+  useEffect(() => {
+    const custom = productsList.filter(p => !PRODUCTS.some(core => core.id === p.id));
+    localStorage.setItem('cosmic_marketplace_custom_products', JSON.stringify(custom));
+  }, [productsList]);
 
   // Theme actions
   const toggleTheme = () => setTheme(prev => prev === 'dark' ? 'light' : 'dark');
@@ -365,9 +382,30 @@ export const StateProvider: React.FC<{ children: React.ReactNode }> = ({ childre
     addNotification('Review Submitted', 'Thanks! Your detailed review was submitted.', 'success');
   };
 
+  // Add customized logo or thumbnail product
+  const addCustomProduct = (newProd: Product) => {
+    setProductsList(prev => [newProd, ...prev]);
+    // Also seed an initial review for it to feel organic
+    setProductReviews(prev => ({
+      ...prev,
+      [newProd.id]: [
+        {
+          id: `rev-${newProd.id}-auto`,
+          userName: 'Automated Validator Node',
+          userAvatar: 'https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?auto=format&fit=crop&w=150&q=80',
+          rating: 5,
+          comment: `Successfully compiled and verified custom assets for "${newProd.title}". Ready for sandbox operations!`,
+          date: new Date().toISOString().split('T')[0],
+          helpfulCount: 3
+        }
+      ]
+    }));
+    addNotification('Asset Catalogued Success', `"${newProd.title}" customized asset added successfully! Available in catalog.`, 'success');
+  };
+
   return (
     <StateContext.Provider value={{
-      products: PRODUCTS,
+      products: productsList,
       cart,
       wishlist,
       user,
@@ -393,7 +431,8 @@ export const StateProvider: React.FC<{ children: React.ReactNode }> = ({ childre
       markAllNotificationsRead,
       clearAllNotifications,
       submitProductReview,
-      addFunds
+      addFunds,
+      addCustomProduct
     }}>
       {children}
     </StateContext.Provider>

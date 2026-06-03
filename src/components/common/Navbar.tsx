@@ -4,11 +4,12 @@
  */
 
 import React, { useState, useRef, useEffect } from 'react';
-import { Link, useLocation } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'motion/react';
 import {
   Menu, X, Search, Heart, ShoppingCart, Bell, User, LogOut, Sun, Moon,
-  ChevronDown, CreditCard, Plus, HelpCircle, Check, Sparkles, MessageSquare
+  ChevronDown, CreditCard, Plus, HelpCircle, Check, Sparkles, MessageSquare,
+  Upload, Image, FileText, Send
 } from 'lucide-react';
 import { useAppState } from '../../store/StateContext';
 import { CATEGORIES } from '../../data/products';
@@ -20,15 +21,26 @@ interface NavbarProps {
 export const Navbar: React.FC<NavbarProps> = ({ onOpenCart }) => {
   const {
     user, cart, wishlist, notifications, theme, toggleTheme,
-    markNotificationRead, markAllNotificationsRead, clearAllNotifications, addFunds
+    markNotificationRead, markAllNotificationsRead, clearAllNotifications, addFunds,
+    addCustomProduct
   } = useAppState();
 
   const location = useLocation();
+  const navigate = useNavigate();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [profileOpen, setProfileOpen] = useState(false);
   const [notificationsOpen, setNotificationsOpen] = useState(false);
   const [fundsModalOpen, setFundsModalOpen] = useState(false);
   const [addAmount, setAddAmount] = useState('50');
+
+  // Customized Logos and Thumbnails creator modal state
+  const [creatorModalOpen, setCreatorModalOpen] = useState(false);
+  const [customName, setCustomName] = useState('');
+  const [customPNGUrl, setCustomPNGUrl] = useState('');
+  const [customCategory, setCustomCategory] = useState('templates');
+  const [customFile, setCustomFile] = useState('');
+  const [customPrice, setCustomPrice] = useState('19');
+  const [customDescription, setCustomDescription] = useState('');
 
   const profileRef = useRef<HTMLDivElement>(null);
   const notifRef = useRef<HTMLDivElement>(null);
@@ -57,6 +69,55 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenCart }) => {
       addFunds(val);
       setFundsModalOpen(false);
     }
+  };
+
+  const handleCustomProductSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+
+    const finalPNGUrl = customPNGUrl.trim() || 'https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?auto=format&fit=crop&w=500&q=80';
+    const finalName = customName.trim() || 'Custom Logo Design Vector';
+    const finalFile = customFile.trim() || 'High-res Vector Asset (ZIP)';
+    const priceNum = parseFloat(customPrice) || 19;
+    const finalDesc = customDescription.trim() || `Professional standard personalized artwork layout catalogued with high-performance specs. Built with scalable PNG elements, transparent alpha layers, and beautiful visual density constraints.`;
+
+    const generatedId = `custom-prod-${Date.now()}`;
+    const newProduct = {
+      id: generatedId,
+      title: finalName,
+      description: finalDesc.slice(0, 150) + '...',
+      detailedDescription: finalDesc,
+      features: [
+        '100% Transparent PNG render layout included',
+        'Includes editable master SVG/vector nodes',
+        'Commercial premium sandbox license pre-cleared',
+        'Fully responsive visual framing metrics'
+      ],
+      price: priceNum,
+      rating: 5.0,
+      reviewsCount: 1,
+      category: customCategory,
+      image: finalPNGUrl,
+      gallery: [finalPNGUrl],
+      fileSize: '18.5 MB',
+      fileType: finalFile,
+      isNew: true,
+      salesCount: 1,
+      tags: ['Customized', 'Branding', 'Artwork', 'PNG Logo', 'Creator Hub'],
+      author: user.name || 'Amelia Sterling',
+      license: 'Commercial License'
+    };
+
+    addCustomProduct(newProduct);
+    
+    // Clear inputs and dismiss modal
+    setCustomName('');
+    setCustomPNGUrl('');
+    setCustomFile('');
+    setCustomDescription('');
+    setCreatorModalOpen(false);
+
+    // Redirect user to the specific channel category inside Marketplace to view their creation!
+    navigate(`/marketplace?cat=${customCategory}`);
   };
 
   const navLinks = [
@@ -88,7 +149,7 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenCart }) => {
             </div>
 
             {/* Desktop Navigation Link Block */}
-            <nav className="hidden md:flex space-x-1">
+            <nav className="hidden md:flex items-center space-x-1">
               {navLinks.map((link) => {
                 const isActive = location.pathname === link.path;
                 return (
@@ -112,6 +173,15 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenCart }) => {
                   </Link>
                 );
               })}
+
+              <button
+                onClick={() => setCreatorModalOpen(true)}
+                className="ml-2 relative px-3 py-1.5 text-xs font-bold rounded-lg border border-brand-cyan/20 bg-slate-950 text-brand-cyan hover:text-white hover:border-brand-purple hover:bg-gradient-to-tr hover:from-brand-purple/20 hover:to-brand-cyan/20 transition-all shadow-inner cursor-pointer flex items-center gap-1 active:scale-95 text-nowrap"
+                title="Design Custom Logos & Thumbnails"
+              >
+                <Sparkles className="w-3.5 h-3.5 text-brand-cyan" />
+                Custom Creator
+              </button>
             </nav>
 
             {/* Action Bar (Theme, Saved, Cart, Notifications, User Profile) */}
@@ -353,6 +423,17 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenCart }) => {
                     </Link>
                   );
                 })}
+
+                <button
+                  onClick={() => {
+                    setMobileMenuOpen(false);
+                    setCreatorModalOpen(true);
+                  }}
+                  className="w-full flex items-center justify-center gap-2 px-4 py-2.5 text-xs font-bold bg-gradient-to-r from-brand-purple via-brand-pink to-brand-cyan text-white rounded-lg mt-3 shadow-lg active:scale-95 cursor-pointer"
+                >
+                  <Sparkles className="w-3.5 h-3.5 text-white animate-pulse" />
+                  Custom Design Hub ✦
+                </button>
               </div>
             </motion.div>
           )}
@@ -452,6 +533,226 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenCart }) => {
                     className="w-1/2 py-2.5 rounded-lg bg-gradient-to-r from-brand-purple to-brand-cyan text-xs font-bold text-white hover:opacity-95 shadow-lg shadow-purple-500/20 flex items-center justify-center gap-1 cursor-pointer"
                   >
                     <Plus className="w-3.5 h-3.5" /> Credit ${parseFloat(addAmount || '0').toFixed(2)}
+                  </button>
+                </div>
+              </form>
+            </motion.div>
+          </div>
+        )}
+      </AnimatePresence>
+
+      {/* Customized Logo & Thumbnail Creator Workspace Dialog Modal */}
+      <AnimatePresence>
+        {creatorModalOpen && (
+          <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/85 backdrop-blur-md overflow-y-auto">
+            <motion.div
+              initial={{ scale: 0.95, opacity: 0, y: 30 }}
+              animate={{ scale: 1, opacity: 1, y: 0 }}
+              exit={{ scale: 0.95, opacity: 0, y: 20 }}
+              className="w-full max-w-2xl rounded-2xl border border-white/10 bg-slate-900/95 shadow-2xl p-6 text-slate-100 overflow-hidden relative"
+            >
+              <div className="absolute top-0 inset-x-0 h-1.5 bg-gradient-to-r from-brand-purple via-brand-pink to-brand-cyan" />
+
+              <div className="flex items-center justify-between pb-4 border-b border-white/8">
+                <div className="flex items-center gap-2">
+                  <div className="p-1.5 rounded-xl bg-brand-purple/10 border border-brand-purple/20">
+                    <Sparkles className="w-5 h-5 text-brand-purple" />
+                  </div>
+                  <div>
+                    <h3 className="font-display font-bold text-lg text-white">Nebula Design Workspace</h3>
+                    <p className="text-[10px] text-slate-400 font-mono uppercase tracking-wider">Catalog Customized Logos & Thumbnail assets</p>
+                  </div>
+                </div>
+                <button
+                  onClick={() => setCreatorModalOpen(false)}
+                  className="p-1.5 hover:bg-slate-800 rounded-lg text-slate-400 hover:text-slate-200 transition-colors"
+                >
+                  <X className="w-4 h-4" />
+                </button>
+              </div>
+
+              <form onSubmit={handleCustomProductSubmit} className="mt-5 space-y-5">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+                  
+                  {/* Left Column Fields */}
+                  <div className="space-y-4">
+                    <div>
+                      <label className="block text-[10px] uppercase font-bold text-slate-400 tracking-wider mb-1.5">Asset / Brand Name</label>
+                      <input
+                        type="text"
+                        value={customName}
+                        onChange={(e) => setCustomName(e.target.value)}
+                        className="w-full px-3.5 py-2 bg-slate-950/85 border border-white/10 rounded-xl text-xs font-semibold text-white focus:outline-none focus:border-brand-purple focus:ring-1 focus:ring-brand-purple transition-all"
+                        placeholder="e.g. Apex Chrome Brand Identity Pack"
+                        required
+                      />
+                    </div>
+
+                    <div>
+                      <label className="block text-[10px] uppercase font-bold text-slate-400 tracking-wider mb-1.5">PNG Logo / Thumbnail URL</label>
+                      <input
+                        type="url"
+                        value={customPNGUrl}
+                        onChange={(e) => setCustomPNGUrl(e.target.value)}
+                        className="w-full px-3.5 py-2 bg-slate-950/85 border border-white/10 rounded-xl text-xs font-mono text-white focus:outline-none focus:border-brand-purple focus:ring-1 focus:ring-brand-purple transition-all"
+                        placeholder="Paste image URL (https://...)"
+                      />
+
+                      {/* Hot preset selector tags to aid user experience */}
+                      <div className="mt-2 space-y-1">
+                        <span className="text-[9px] text-slate-400 font-bold uppercase tracking-wider block">Or quick click premium art presets:</span>
+                        <div className="flex flex-wrap gap-1.5 pt-0.5">
+                          {[
+                            { name: 'Metallic Sphere', url: 'https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?auto=format&fit=crop&w=500&q=80' },
+                            { name: 'Neon Workspace', url: 'https://images.unsplash.com/photo-1551288049-bebda4e38f71?auto=format&fit=crop&w=500&q=80' },
+                            { name: '3D Chrome Logo', url: 'https://images.unsplash.com/photo-1618005198143-d3663efd8ccd?auto=format&fit=crop&w=500&q=80' },
+                            { name: 'Retro Horizon', url: 'https://images.unsplash.com/photo-1639762681485-074b7f938ba0?auto=format&fit=crop&w=500&q=80' }
+                          ].map(preset => (
+                            <button
+                              key={preset.name}
+                              type="button"
+                              onClick={() => setCustomPNGUrl(preset.url)}
+                              className={`px-2 py-1 rounded text-[9px] font-mono border transition-colors cursor-pointer ${
+                                customPNGUrl === preset.url
+                                  ? 'bg-brand-cyan/20 border-brand-cyan text-brand-cyan font-bold'
+                                  : 'bg-slate-950 border-white/5 hover:border-white/10 text-slate-400'
+                              }`}
+                            >
+                              {preset.name}
+                            </button>
+                          ))}
+                        </div>
+                      </div>
+                    </div>
+
+                    <div className="grid grid-cols-2 gap-3.5">
+                      <div>
+                        <label className="block text-[10px] uppercase font-bold text-slate-400 tracking-wider mb-1.5">Asset Category</label>
+                        <select
+                          value={customCategory}
+                          onChange={(e) => setCustomCategory(e.target.value)}
+                          className="w-full px-3 py-2 bg-slate-950 border border-white/10 rounded-xl text-xs font-semibold text-white focus:outline-none focus:border-brand-purple transition-all cursor-pointer"
+                        >
+                          <option value="templates">Templates & UI Kits</option>
+                          <option value="design">Figma Systems</option>
+                          <option value="assets-3d">3D Assets Pack</option>
+                          <option value="audio">Audio & Waves</option>
+                          <option value="fonts">Display Fonts</option>
+                          <option value="web3">Web3 Info Node</option>
+                        </select>
+                      </div>
+
+                      <div>
+                        <label className="block text-[10px] uppercase font-bold text-slate-400 tracking-wider mb-1.5">Sandbox Valuation ($)</label>
+                        <input
+                          type="number"
+                          min="0"
+                          max="999"
+                          value={customPrice}
+                          onChange={(e) => setCustomPrice(e.target.value)}
+                          className="w-full px-3 py-2 bg-slate-950 border border-white/10 rounded-xl text-xs font-mono font-bold text-white focus:outline-none focus:border-brand-purple focus:ring-1 focus:ring-brand-purple transition-all"
+                          placeholder="25"
+                          required
+                        />
+                      </div>
+                    </div>
+
+                    <div>
+                      <label className="block text-[10px] uppercase font-bold text-slate-400 tracking-wider mb-1.5">File Format & Size</label>
+                      <input
+                        type="text"
+                        value={customFile}
+                        onChange={(e) => setCustomFile(e.target.value)}
+                        className="w-full px-3.5 py-2 bg-slate-950/85 border border-white/10 rounded-xl text-xs font-semibold text-white focus:outline-none focus:border-brand-purple transition-all"
+                        placeholder="e.g. Master SVG + Hi-Res PNG (14.2 MB ZIP)"
+                        required
+                      />
+                    </div>
+                  </div>
+
+                  {/* Right Column Layout: Asset Sandbox Live Card Preview! */}
+                  <div className="flex flex-col justify-between space-y-4">
+                    <div>
+                      <span className="block text-[10px] uppercase font-bold text-slate-400 tracking-wider mb-1.5 text-center">Interactive Real-time Live Preview</span>
+                      
+                      {/* Simulated Card resembling the beautiful aesthetic layout */}
+                      <div className="w-full max-w-[240px] mx-auto rounded-2xl border border-white/10 bg-slate-950 overflow-hidden shadow-xl p-3 space-y-2.5 relative group">
+                        
+                        {/* Dynamic category badge */}
+                        <div className="flex items-center justify-between">
+                          <span className="px-2 py-0.5 rounded bg-brand-purple/10 border border-brand-purple/20 text-[8px] font-mono font-bold uppercase tracking-wider text-brand-cyan">
+                            {CATEGORIES.find(c => c.id === customCategory)?.name || 'Custom'}
+                          </span>
+                          <span className="text-[8px] font-mono text-slate-500 uppercase">PREVIEW NODE</span>
+                        </div>
+
+                        {/* Visual Thumbnail PNG */}
+                        <div className="aspect-[1.6] rounded-xl bg-slate-900 border border-white/5 overflow-hidden flex items-center justify-center relative">
+                          <img
+                            src={customPNGUrl.trim() || 'https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?auto=format&fit=crop&w=500&q=80'}
+                            alt=""
+                            className="w-full h-full object-cover pointer-events-none"
+                            referrerPolicy="no-referrer"
+                          />
+                          <div className="absolute inset-0 bg-gradient-to-t from-slate-950 via-transparent to-transparent opacity-60" />
+                          <div className="absolute bottom-1.5 right-1.5 bg-slate-900/40 p-1 rounded-md backdrop-blur-md">
+                            <Image className="w-3.5 h-3.5 text-white/70" />
+                          </div>
+                        </div>
+
+                        {/* Title and Specs */}
+                        <div>
+                          <h5 className="font-semibold text-xs text-white truncate">{customName.trim() || 'Awesome customized logo asset'}</h5>
+                          <div className="flex items-center justify-between mt-1 text-[9px] text-slate-400">
+                            <span className="font-mono">{customFile.trim() || '14.2 MB ZIP'}</span>
+                            <span className="font-bold text-brand-purple text-xs font-mono">${parseFloat(customPrice || '19').toFixed(2)}</span>
+                          </div>
+                        </div>
+
+                        <div className="border-t border-white/5 pt-1.5 flex justify-between items-center text-[8px] text-slate-500">
+                          <span>Author: {user.name}</span>
+                          <span>Rating: ★ 5.0</span>
+                        </div>
+
+                      </div>
+                    </div>
+
+                    <div>
+                      <label className="block text-[10px] uppercase font-bold text-slate-400 tracking-wider mb-1.5">Detailed Assets Decsription</label>
+                      <textarea
+                        value={customDescription}
+                        onChange={(e) => setCustomDescription(e.target.value)}
+                        rows={2}
+                        className="w-full px-3.5 py-1.5 bg-slate-950/85 border border-white/10 rounded-xl text-xs font-semibold text-white focus:outline-none focus:border-brand-purple transition-all resize-none"
+                        placeholder="Provide details about standard transparent scales, editable properties..."
+                      />
+                    </div>
+                  </div>
+
+                </div>
+
+                <div className="bg-brand-cyan/5 border border-brand-cyan/15 rounded-xl p-3.5 flex items-start gap-2.5">
+                  <div className="p-1 rounded bg-brand-cyan/10">
+                    <Check className="w-4 h-4 text-brand-cyan" />
+                  </div>
+                  <p className="text-[11px] leading-relaxed text-slate-300">
+                    Your customized art templates and logos are generated live in the client sandbox cache. Clicking the **Send Catalog** button instantly catalogues this item. All pages will synchronise isomorphically.
+                  </p>
+                </div>
+
+                <div className="flex gap-2 pt-1">
+                  <button
+                    type="button"
+                    onClick={() => setCreatorModalOpen(false)}
+                    className="w-1/3 py-2.5 rounded-xl text-xs font-bold font-sans border border-white/10 hover:bg-slate-800 transition-colors"
+                  >
+                    Close Desk
+                  </button>
+                  <button
+                    type="submit"
+                    className="w-2/3 py-2.5 rounded-xl bg-gradient-to-r from-brand-purple via-brand-pink to-brand-cyan text-xs font-bold text-white hover:opacity-95 shadow-lg shadow-purple-500/20 flex items-center justify-center gap-1.5 cursor-pointer active:scale-95"
+                  >
+                    <Send className="w-3.5 h-3.5" /> Send Assets to Sandbox Stream ✦
                   </button>
                 </div>
               </form>
