@@ -1,0 +1,8 @@
+{
+  "name": "Nebula Marketplace",
+  "description": "A dark premium digital products marketplace client with glassmorphism layouts, full cart system, wishlist, custom profile settings, and simulation checkouts.",
+  "requestFramePermissions": [],
+  "majorCapabilities": [
+    "MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"
+  ]
+}
