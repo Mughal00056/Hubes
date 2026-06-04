@@ -35,9 +35,10 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenCart }) => {
 
   // Customized Logos and Thumbnails creator modal state
   const [creatorModalOpen, setCreatorModalOpen] = useState(false);
+  const [creatorTab, setCreatorTab] = useState<'logo' | 'thumbnail'>('logo');
   const [customName, setCustomName] = useState('');
   const [customPNGUrl, setCustomPNGUrl] = useState('');
-  const [customCategory, setCustomCategory] = useState('templates');
+  const [customCategory, setCustomCategory] = useState('logos');
   const [customFile, setCustomFile] = useState('');
   const [customPrice, setCustomPrice] = useState('19');
   const [customDescription, setCustomDescription] = useState('');
@@ -74,11 +75,34 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenCart }) => {
   const handleCustomProductSubmit = (e: React.FormEvent) => {
     e.preventDefault();
 
-    const finalPNGUrl = customPNGUrl.trim() || 'https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?auto=format&fit=crop&w=500&q=80';
-    const finalName = customName.trim() || 'Custom Logo Design Vector';
-    const finalFile = customFile.trim() || 'High-res Vector Asset (ZIP)';
+    const isLogo = customCategory === 'logos';
+    const isThumbnail = customCategory === 'thumbnails';
+    
+    const finalPNGUrl = customPNGUrl.trim() || (isLogo
+      ? 'https://images.unsplash.com/photo-1618005198143-d3663efd8ccd?auto=format&fit=crop&w=500&q=80'
+      : isThumbnail
+        ? 'https://images.unsplash.com/photo-1551288049-bebda4e38f71?auto=format&fit=crop&w=500&q=80'
+        : 'https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?auto=format&fit=crop&w=500&q=80');
+    
+    const finalName = customName.trim() || (isLogo
+      ? 'Custom Premium Corporate Logo Vector'
+      : isThumbnail
+        ? 'Ultimate Clickbait Viral Thumbnail Layout'
+        : 'Custom Artistic Template Pack');
+        
+    const finalFile = customFile.trim() || (isLogo
+      ? 'Master SVG File + Transparent PNG (4.5 MB)'
+      : isThumbnail
+        ? 'Ultra HD JPG + Layered Figma File (18.2 MB)'
+        : 'High-res Digital Asset Package (12.0 MB)');
+        
     const priceNum = parseFloat(customPrice) || 19;
-    const finalDesc = customDescription.trim() || `Professional standard personalized artwork layout catalogued with high-performance specs. Built with scalable PNG elements, transparent alpha layers, and beautiful visual density constraints.`;
+    
+    const finalDesc = customDescription.trim() || (isLogo
+      ? 'Professional standard personalized company brandmark or symbolic asset. Designed with perfect geometry alignment parameters, transparent background alpha transparency layers, and clean vector anchors.'
+      : isThumbnail
+        ? 'High CTR social cover artwork scaled to exact 16:9 pixel grids. Perfect for high performance YouTube presentation decks, rich Twitch banners, or tech tutorial showcases.'
+        : 'High-fidelity customizable visual layouts catalogued with high-performance specs. Built with scalable PNG elements, transparent alpha layers, and beautiful visual density constraints.');
 
     const generatedId = `custom-prod-${Date.now()}`;
     const newProduct = {
@@ -86,11 +110,21 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenCart }) => {
       title: finalName,
       description: finalDesc.slice(0, 150) + '...',
       detailedDescription: finalDesc,
-      features: [
+      features: isLogo ? [
         '100% Transparent PNG render layout included',
         'Includes editable master SVG/vector nodes',
         'Commercial premium sandbox license pre-cleared',
         'Fully responsive visual framing metrics'
+      ] : isThumbnail ? [
+        'High contrast graphic composition optimized for CTR',
+        'Fully editable layered master project file included',
+        'Responsive color variants (Dark/Light setup pre-configured)',
+        'Royalty-free premium elements layout pre-packed'
+      ] : [
+        'Highly modular customizable design assets',
+        'Organized styles and component definitions',
+        'Ready-to-use vector exports',
+        'Full customer support and updates path'
       ],
       price: priceNum,
       rating: 5.0,
@@ -98,11 +132,15 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenCart }) => {
       category: customCategory,
       image: finalPNGUrl,
       gallery: [finalPNGUrl],
-      fileSize: '18.5 MB',
+      fileSize: isLogo ? '4.5 MB' : isThumbnail ? '18.2 MB' : '12.0 MB',
       fileType: finalFile,
       isNew: true,
       salesCount: 1,
-      tags: ['Customized', 'Branding', 'Artwork', 'PNG Logo', 'Creator Hub'],
+      tags: isLogo
+        ? ['Customized', 'Branding', 'Artwork', 'PNG Logo', 'Corporate']
+        : isThumbnail
+          ? ['Thumbnail', 'YouTube', 'Social Cover', 'CTR Boost', 'PSD Layered']
+          : ['Customized', 'Sandbox', 'Visuals', 'Templates'],
       author: user.name || 'Amelia Sterling',
       license: 'Commercial License'
     };
@@ -633,12 +671,12 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenCart }) => {
                           onChange={(e) => setCustomCategory(e.target.value)}
                           className="w-full px-3 py-2 bg-slate-950 border border-white/10 rounded-xl text-xs font-semibold text-white focus:outline-none focus:border-brand-purple transition-all cursor-pointer"
                         >
-                          <option value="templates">Templates & UI Kits</option>
+                          <option value="logos">Premium Logos & Branding</option>
+                          <option value="thumbnails">Thumbnails & Covers</option>
+                          <option value="templates">UI Kits & Templates</option>
                           <option value="design">Figma Systems</option>
-                          <option value="assets-3d">3D Assets Pack</option>
-                          <option value="audio">Audio & Waves</option>
-                          <option value="fonts">Display Fonts</option>
-                          <option value="web3">Web3 Info Node</option>
+                          <option value="assets-3d">3D Assets</option>
+                          <option value="audio">Audio & Presets</option>
                         </select>
                       </div>
 

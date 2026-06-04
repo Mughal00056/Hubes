@@ -6,12 +6,12 @@
 import { Product, Coupon, Review } from '../types';
 
 export const CATEGORIES = [
+  { id: 'logos', name: 'Premium Logos & Branding', icon: 'Sparkles', count: 16, color: 'from-[#ec4899] to-[#8b5cf6]' },
+  { id: 'thumbnails', name: 'Thumbnails & Covers', icon: 'Image', count: 12, color: 'from-[#fb7185] to-[#f43f5e]' },
   { id: 'templates', name: 'UI Kits & Templates', icon: 'Layout', count: 18, color: 'from-[#ec4899] to-[#8b5cf6]' },
   { id: 'design', name: 'Figma Systems', icon: 'Palette', count: 12, color: 'from-[#3b82f6] to-[#06b6d4]' },
   { id: 'assets-3d', name: '3D Assets', icon: 'Component', count: 9, color: 'from-[#10b981] to-[#3b82f6]' },
-  { id: 'audio', name: 'Audio & Presets', icon: 'Music', count: 14, color: 'from-[#f59e0b] to-[#ec4899]' },
-  { id: 'fonts', name: 'Typography', icon: 'Type', count: 7, color: 'from-[#8b5cf6] to-[#10b981]' },
-  { id: 'web3', name: 'Web3 & Crypt', icon: 'Cpu', count: 11, color: 'from-[#06b6d4] to-[#f59e0b]' }
+  { id: 'audio', name: 'Audio & Presets', icon: 'Music', count: 14, color: 'from-[#f59e0b] to-[#ec4899]' }
 ];
 
 export const PRODUCTS: Product[] = [

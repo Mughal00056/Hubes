@@ -9,7 +9,7 @@ import { motion, AnimatePresence } from 'motion/react';
 import {
   Sparkles, ArrowRight, Star, ShoppingBag, ShieldCheck, Download, Users, Lightbulb,
   Heart, Flame, ArrowLeft, Send, Layout, Palette, Component, Music, Type, Cpu,
-  ChevronLeft, ChevronRight
+  ChevronLeft, ChevronRight, Image
 } from 'lucide-react';
 import { useAppState } from '../store/StateContext';
 import { CATEGORIES, TESTIMONIALS } from '../data/products';
@@ -18,6 +18,8 @@ import { Product } from '../types';
 
 const getCategoryIcon = (iconName: string) => {
   switch (iconName) {
+    case 'Sparkles': return <Sparkles className="w-5 h-5 text-brand-purple group-hover:text-brand-cyan transition-colors" />;
+    case 'Image': return <Image className="w-5 h-5 text-brand-purple group-hover:text-brand-cyan transition-colors" />;
     case 'Layout': return <Layout className="w-5 h-5 text-brand-purple group-hover:text-brand-cyan transition-colors" />;
     case 'Palette': return <Palette className="w-5 h-5 text-brand-purple group-hover:text-brand-cyan transition-colors" />;
     case 'Component': return <Component className="w-5 h-5 text-brand-purple group-hover:text-brand-cyan transition-colors" />;
@@ -30,11 +32,27 @@ const getCategoryIcon = (iconName: string) => {
 
 const CATEGORY_CARDS = [
   {
+    id: 'logos',
+    name: 'Logos & Brand Identity',
+    count: '16+ templates',
+    actionText: 'Build Custom',
+    gradient: 'from-[#6366f1] via-[#8b5cf6] to-[#ec4899]',
+    image: 'https://images.unsplash.com/photo-1618005198143-d3663efd8ccd?auto=format&fit=crop&w=500&q=80',
+  },
+  {
+    id: 'thumbnails',
+    name: 'Thumbnails & Covers',
+    count: '12+ models',
+    actionText: 'Create Custom',
+    gradient: 'from-[#fb7185] via-[#f43f5e] to-[#be185d]',
+    image: 'https://images.unsplash.com/photo-1551288049-bebda4e38f71?auto=format&fit=crop&w=500&q=80',
+  },
+  {
     id: 'templates',
     name: 'UI Kits & Templates',
     count: '18+ items',
     actionText: 'Download',
-    gradient: 'from-[#6366f1] via-[#8b5cf6] to-[#d946ef]',
+    gradient: 'from-[#0ea5e9] via-[#2563eb] to-[#7c3aed]',
     image: 'https://images.unsplash.com/photo-1551288049-bebda4e38f71?auto=format&fit=crop&w=500&q=80',
   },
   {
@@ -60,22 +78,6 @@ const CATEGORY_CARDS = [
     actionText: 'Download',
     gradient: 'from-[#b91c1c] via-[#dc2626] to-[#be185d]',
     image: 'https://images.unsplash.com/photo-1598488035139-bdbb2231ce04?auto=format&fit=crop&w=500&q=80',
-  },
-  {
-    id: 'fonts',
-    name: 'Display Typography',
-    count: '7+ families',
-    actionText: 'check now',
-    gradient: 'from-[#6b21a8] via-[#a21caf] to-[#047857]',
-    image: 'https://images.unsplash.com/photo-1561070791-26c113006238?auto=format&fit=crop&w=500&q=80',
-  },
-  {
-    id: 'web3',
-    name: 'Web3 & Crypt Info',
-    count: '11+ nodes',
-    actionText: 'check info',
-    gradient: 'from-[#0369a1] via-[#0891b2] to-[#c2410c]',
-    image: 'https://images.unsplash.com/photo-1639762681485-074b7f938ba0?auto=format&fit=crop&w=500&q=80',
   }
 ];
 
@@ -86,8 +88,25 @@ interface HomeProps {
 export const Home: React.FC<HomeProps> = ({ onQuickView }) => {
   const { products } = useAppState();
   const navigate = useNavigate();
-  const [activeSlide, setActiveSlide] = useState(0);
   const scrollRef = useRef<HTMLDivElement>(null);
+  
+  const [randomMsgIdx, setRandomMsgIdx] = useState(0);
+  const [consoleSwitchOn, setConsoleSwitchOn] = useState(true);
+
+  const randomTexts = [
+    "✦ Dynamic Sandbox compilations: 3D render modules synchronized & calibrated.",
+    "✦ Network Channel Feed: Transparency layers optimized for PNG/SVG exports.",
+    "✦ Quantum Design Engine: Auto-layout variants loaded with zero visual offsets.",
+    "✦ Ambient Stream: 5,420 unique vector glyphs catalogued in customizable sandbox."
+  ];
+
+  const handleNextMessage = () => {
+    setRandomMsgIdx(prev => (prev + 1) % randomTexts.length);
+  };
+
+  const handlePrevMessage = () => {
+    setRandomMsgIdx(prev => (prev - 1 + randomTexts.length) % randomTexts.length);
+  };
 
   const handleScroll = (direction: 'left' | 'right') => {
     if (scrollRef.current) {
@@ -103,51 +122,6 @@ export const Home: React.FC<HomeProps> = ({ onQuickView }) => {
   const featuredProducts = products.filter(p => p.isBestseller || p.id === 'prod-1').slice(0, 3);
   const trendingProducts = products.filter(p => p.isTrending || p.id === 'prod-3').slice(0, 4);
 
-  // Sliced Hero banners mapping to actual quality products
-  const heroSlides = [
-    {
-      id: 'slide-1',
-      productId: 'prod-1',
-      title: 'Synapse UI Framework Boilerplate',
-      subtitle: 'REVOLUTIONARY DARK CONTEXT MODEL',
-      badge: 'React 19 Tech Stack',
-      description: 'The premier dark theme SaaS kit mapped out in responsive styled Tailwind elements for high-growth tech setups.',
-      color: 'from-violet-600 via-indigo-600 to-cyan-500',
-      image: 'https://images.unsplash.com/photo-1551288049-bebda4e38f71?auto=format&fit=crop&w=1200&q=80',
-      price: '$49'
-    },
-    {
-      id: 'slide-2',
-      productId: 'prod-2',
-      title: 'Aero Figma Analytical Component Hub',
-      subtitle: 'HIGH CONTRAST AUTO-LAYOUTS v4',
-      badge: 'Figma Library',
-      description: 'Streamline interface prototypes in minutes. Fully synchronized local styling parameters, custom variants, and auto-layouts.',
-      color: 'from-cyan-600 via-blue-600 to-indigo-500',
-      image: 'https://images.unsplash.com/photo-1581291518633-83b4ebd1d83e?auto=format&fit=crop&w=1200&q=80',
-      price: '$29'
-    },
-    {
-      id: 'slide-3',
-      productId: 'prod-3',
-      title: 'Chronos Atmospheric 3D Glass Objects',
-      subtitle: 'BLENDER MATERIALS COMPILATION',
-      badge: '3D modeling Cycles rigging',
-      description: 'Generate stunning tech assets or landing showcases with hyper-futuristic glass nodes and metallic custom procedural structures.',
-      color: 'from-emerald-600 via-teal-600 to-blue-500',
-      image: 'https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?auto=format&fit=crop&w=1200&q=80',
-      price: '$39'
-    }
-  ];
-
-  // Automated slider rotation
-  useEffect(() => {
-    const interval = setInterval(() => {
-      setActiveSlide((prev) => (prev + 1) % heroSlides.length);
-    }, 6000);
-    return () => clearInterval(interval);
-  }, [heroSlides.length]);
-
   return (
     <div className="relative overflow-hidden bg-slate-950 min-h-screen text-slate-100 pb-16">
       
@@ -155,90 +129,116 @@ export const Home: React.FC<HomeProps> = ({ onQuickView }) => {
       <div className="absolute top-0 left-1/4 w-96 h-96 rounded-full bg-brand-purple/10 mask-radial blur-3xl animate-pulse-slow pointer-events-none" />
       <div className="absolute top-1/3 right-1/4 w-[400px] h-[400px] rounded-full bg-brand-cyan/10 mask-radial blur-3xl animate-pulse-slow pointer-events-none" />
 
-      {/* Hero interactive visual slider */}
-      <section className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-8 pb-12">
-        <div className="relative rounded-3xl border border-white/8 overflow-hidden bg-slate-900/40 backdrop-blur-md aspect-[16/9] md:aspect-[21/9] min-h-[360px] sm:min-h-[420px] flex flex-col justify-center">
-          
-          <AnimatePresence mode="wait">
-            <motion.div
-              key={activeSlide}
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-              transition={{ duration: 0.6 }}
-              className="absolute inset-0"
-            >
-              {/* Image backdrop with dark overlay */}
-              <div className="absolute inset-0 bg-gradient-to-r from-slate-950 via-slate-950/75 to-slate-950/20 z-10" />
-              <img
-                src={heroSlides[activeSlide].image}
-                alt=""
-                className="w-full h-full object-cover select-none"
-                referrerPolicy="no-referrer"
-              />
-            </motion.div>
-          </AnimatePresence>
+      {/* Static Premium Branding Banner replacing the slider */}
+      <section className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-8 pb-4">
+        <div className="relative rounded-3xl border border-white/8 overflow-hidden bg-gradient-to-tr from-slate-900/90 via-slate-950 to-slate-900/60 p-8 sm:p-12 shadow-2xl flex flex-col md:flex-row items-center justify-between gap-8 min-h-[280px]">
+          {/* Subtle logo backdrop reflection */}
+          <div className="absolute right-0 top-0 w-80 h-full bg-gradient-to-l from-brand-cyan/5 via-brand-purple/5 to-transparent blur-2xl rounded-full pointer-events-none" />
 
-          {/* Slider Content */}
-          <div className="relative z-20 px-6 sm:px-12 max-w-2xl space-y-4">
-            <motion.span
-              initial={{ opacity: 0, y: -10 }}
-              animate={{ opacity: 1, y: 0 }}
-              className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider text-brand-cyan border border-brand-cyan/30 bg-brand-cyan/15"
-            >
-              <Sparkles className="w-3.5 h-3.5" /> {heroSlides[activeSlide].badge}
-            </motion.span>
-
-            <div className="space-y-1 sm:space-y-2">
-              <span className="block text-[11px] font-bold tracking-widest text-slate-400 font-mono">
-                {heroSlides[activeSlide].subtitle}
-              </span>
-              <h1 className="font-display font-bold text-2xl sm:text-4xl text-white tracking-tight leading-none">
-                {heroSlides[activeSlide].title}
-              </h1>
-            </div>
-
-            <p className="text-slate-300 text-xs sm:text-sm leading-relaxed max-w-lg">
-              {heroSlides[activeSlide].description}
+          <div className="max-w-xl space-y-4 relative z-10">
+            <span className="inline-flex items-center gap-1 px-3 py-1 rounded-full text-[10px] uppercase font-bold tracking-widest text-brand-cyan bg-brand-cyan/10 border border-brand-cyan/20">
+              <Sparkles className="w-3 h-3 text-brand-cyan" /> Interactive Assets Desk
+            </span>
+            <h1 className="font-display font-extrabold text-3xl sm:text-5xl text-white tracking-tight leading-none">
+              Welcome to the <span className="text-transparent bg-clip-text bg-gradient-to-r from-brand-purple via-brand-pink to-brand-cyan">NEBULA</span> Sandbox
+            </h1>
+            <p className="text-slate-400 text-xs sm:text-sm leading-relaxed max-w-md">
+              A high-precision modular portal geared for fullstack engineers and artistic pioneers. Catalogue custom layouts directly to your personal workspace live.
             </p>
+          </div>
 
-            {/* Quick channels browsing line wise */}
-            <div className="pt-3 border-t border-white/5 space-y-1.5">
-              <span className="block text-[10px] font-mono tracking-wider text-slate-500 uppercase">Browse categories:</span>
-              <div className="flex flex-wrap items-center gap-2">
-                {CATEGORIES.map((cat, idx) => (
-                  <button
-                    key={cat.id}
-                    onClick={() => navigate(`/marketplace?cat=${cat.id}`)}
-                    className="px-2.5 py-1 rounded-lg border border-white/5 hover:border-brand-purple/40 bg-slate-950/40 text-[11px] font-medium text-slate-400 hover:text-white transition-all cursor-pointer whitespace-nowrap"
+          <div className="flex-shrink-0 relative z-10 flex flex-col sm:flex-row gap-3">
+            <Link
+              to="/marketplace"
+              className="px-5 py-3 rounded-xl bg-gradient-to-r from-brand-purple to-brand-cyan hover:opacity-95 text-xs font-bold text-white uppercase tracking-wider text-center cursor-pointer transition-all active:scale-95 shadow-lg shadow-purple-500/10"
+            >
+              Examine Stock Catalog
+            </Link>
+          </div>
+        </div>
+      </section>
+
+      {/* Grid of categories list quick access & requested console switch widget */}
+      <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 space-y-5">
+        
+        {/* Custom requested "random text arrow switch lagao" channel console */}
+        <div className="rounded-2xl border border-white/10 bg-slate-950 p-4 flex flex-col sm:flex-row items-center justify-between gap-4 shadow-xl">
+          <div className="flex items-center gap-3.5 w-full sm:w-auto">
+            <div className="p-2 rounded-xl bg-brand-cyan/10 border border-brand-cyan/20 flex items-center justify-center">
+              <Cpu className={`w-4 h-4 ${consoleSwitchOn ? 'text-brand-cyan animate-pulse' : 'text-slate-600'}`} />
+            </div>
+            
+            <div className="space-y-1">
+              <span className="text-[9px] font-mono uppercase tracking-widest text-slate-500 font-bold block">
+                Sandbox Console Live Transmission
+              </span>
+              
+              {/* Cycling random text row */}
+              <div className="text-xs font-semibold font-mono tracking-tight text-slate-100 flex items-center gap-1.5 h-5">
+                <AnimatePresence mode="wait">
+                  <motion.span
+                    key={randomMsgIdx}
+                    initial={{ opacity: 0, x: -10 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    exit={{ opacity: 0, x: 10 }}
+                    transition={{ duration: 0.18 }}
+                    className={consoleSwitchOn ? "text-brand-cyan" : "text-slate-400"}
                   >
-                    {cat.name}
-                  </button>
-                ))}
+                    {randomTexts[randomMsgIdx]}
+                  </motion.span>
+                </AnimatePresence>
               </div>
             </div>
           </div>
 
-          {/* Slider Controls Dots */}
-          <div className="absolute bottom-5 right-8 z-20 flex gap-2">
-            {heroSlides.map((_, idx) => (
+          <div className="flex items-center gap-4 w-full sm:w-auto justify-between sm:justify-end">
+            {/* Arrow controllers to switch random text logs */}
+            <div className="flex items-center gap-1 bg-slate-900 rounded-lg p-0.5 border border-white/5">
               <button
-                key={idx}
-                onClick={() => setActiveSlide(idx)}
-                className={`h-2 rounded-full cursor-pointer transition-all duration-300 ${
-                  activeSlide === idx ? 'w-6 bg-brand-purple' : 'w-2 bg-slate-600'
+                onClick={handlePrevMessage}
+                className="p-1 px-2 text-xs font-mono text-slate-400 hover:text-white hover:bg-slate-800 rounded transition-colors cursor-pointer"
+                title="Previous message"
+              >
+                &larr;
+              </button>
+              <span className="text-[10px] font-mono font-bold text-slate-600 px-1 select-none">
+                {randomMsgIdx + 1}/{randomTexts.length}
+              </span>
+              <button
+                onClick={handleNextMessage}
+                className="p-1 px-2 text-xs font-mono text-slate-400 hover:text-white hover:bg-slate-800 rounded transition-colors cursor-pointer"
+                title="Next message"
+              >
+                &rarr;
+              </button>
+            </div>
+
+            {/* Glowing cyberpunk switch toggle */}
+            <div className="flex items-center gap-2">
+              <span className="text-[10px] font-mono uppercase tracking-widest font-bold text-slate-500">
+                {consoleSwitchOn ? "Active" : "Muted"}
+              </span>
+              
+              <button
+                type="button"
+                onClick={() => setConsoleSwitchOn(!consoleSwitchOn)}
+                className={`w-11 h-6 rounded-full p-0.5 transition-colors duration-200 focus:outline-none cursor-pointer ${
+                  consoleSwitchOn ? 'bg-brand-cyan shadow-[0_0_8px_rgba(6,182,212,0.4)]' : 'bg-slate-800'
                 }`}
-                title={`Product slide ${idx + 1}`}
-              />
-            ))}
+              >
+                <div
+                  className={`w-5 h-5 rounded-full bg-slate-950 transition-transform duration-200 flex items-center justify-center border border-white/10 ${
+                    consoleSwitchOn ? 'translate-x-5' : 'translate-x-0'
+                  }`}
+                >
+                  <div className={`w-1.5 h-1.5 rounded-full ${consoleSwitchOn ? 'bg-brand-cyan animate-ping' : 'bg-slate-600'}`} />
+                </div>
+              </button>
+            </div>
           </div>
-
         </div>
-      </section>
 
-      {/* Grid of categories list quick access */}
-      <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 space-y-6">
-        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 pt-2">
           <div>
             <h2 className="font-display font-bold text-2xl sm:text-3xl text-white tracking-tight">Browse by Creative Category</h2>
             <p className="text-xs text-slate-500 mt-1">High-fidelity curated digital asset bundles sorted by department channels.</p>
