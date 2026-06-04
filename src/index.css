@@ -30,24 +30,47 @@
   background: rgba(139, 92, 246, 0.7);
 }
 
-/* Glassmorphism helpers */
+/* Glassmorphism replaced with solid black UI */
 .glass-panel {
-  background: rgba(15, 23, 42, 0.65);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
-  border: 1px solid rgba(255, 255, 255, 0.08);
+  background: #000000;
+  border: 1px solid rgba(255, 255, 255, 0.15);
 }
 
 .glass-panel-light {
-  background: rgba(255, 255, 255, 0.75);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
-  border: 1px solid rgba(15, 23, 42, 0.08);
+  background: #000000;
+  border: 1px solid rgba(255, 255, 255, 0.15);
 }
 
 .glass-nav {
-  backdrop-filter: blur(16px);
-  -webkit-backdrop-filter: blur(16px);
+  background: #000000;
+}
+
+/* Force override native tailwind glass opacities and backdrop blurs to solid black color */
+.backdrop-blur-md, 
+.backdrop-blur-sm, 
+.backdrop-blur-lg, 
+.backdrop-blur {
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+}
+
+.bg-slate-900\/10,
+.bg-slate-900\/30,
+.bg-slate-900\/40,
+.bg-slate-900\/60,
+.bg-slate-900\/90,
+.bg-slate-950\/40,
+.bg-slate-950\/60,
+.bg-slate-950\/70,
+.bg-slate-950\/80,
+.bg-slate-950\/85 {
+  background-color: #000000 !important;
+}
+
+.border-white\/8,
+.border-white\/5,
+.border-white\/10 {
+  border-color: rgba(255, 255, 255, 0.15) !important;
 }
 
 .text-glow-purple {

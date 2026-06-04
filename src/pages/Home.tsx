@@ -89,24 +89,6 @@ export const Home: React.FC<HomeProps> = ({ onQuickView }) => {
   const { products } = useAppState();
   const navigate = useNavigate();
   const scrollRef = useRef<HTMLDivElement>(null);
-  
-  const [randomMsgIdx, setRandomMsgIdx] = useState(0);
-  const [consoleSwitchOn, setConsoleSwitchOn] = useState(true);
-
-  const randomTexts = [
-    "✦ Dynamic Sandbox compilations: 3D render modules synchronized & calibrated.",
-    "✦ Network Channel Feed: Transparency layers optimized for PNG/SVG exports.",
-    "✦ Quantum Design Engine: Auto-layout variants loaded with zero visual offsets.",
-    "✦ Ambient Stream: 5,420 unique vector glyphs catalogued in customizable sandbox."
-  ];
-
-  const handleNextMessage = () => {
-    setRandomMsgIdx(prev => (prev + 1) % randomTexts.length);
-  };
-
-  const handlePrevMessage = () => {
-    setRandomMsgIdx(prev => (prev - 1 + randomTexts.length) % randomTexts.length);
-  };
 
   const handleScroll = (direction: 'left' | 'right') => {
     if (scrollRef.current) {
@@ -136,9 +118,6 @@ export const Home: React.FC<HomeProps> = ({ onQuickView }) => {
           <div className="absolute right-0 top-0 w-80 h-full bg-gradient-to-l from-brand-cyan/5 via-brand-purple/5 to-transparent blur-2xl rounded-full pointer-events-none" />
 
           <div className="max-w-xl space-y-4 relative z-10">
-            <span className="inline-flex items-center gap-1 px-3 py-1 rounded-full text-[10px] uppercase font-bold tracking-widest text-brand-cyan bg-brand-cyan/10 border border-brand-cyan/20">
-              <Sparkles className="w-3 h-3 text-brand-cyan" /> Interactive Assets Desk
-            </span>
             <h1 className="font-display font-extrabold text-3xl sm:text-5xl text-white tracking-tight leading-none">
               Welcome to the <span className="text-transparent bg-clip-text bg-gradient-to-r from-brand-purple via-brand-pink to-brand-cyan">NEBULA</span> Sandbox
             </h1>
@@ -158,86 +137,9 @@ export const Home: React.FC<HomeProps> = ({ onQuickView }) => {
         </div>
       </section>
 
-      {/* Grid of categories list quick access & requested console switch widget */}
+      {/* Grid of categories list quick access */}
       <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 space-y-5">
         
-        {/* Custom requested "random text arrow switch lagao" channel console */}
-        <div className="rounded-2xl border border-white/10 bg-slate-950 p-4 flex flex-col sm:flex-row items-center justify-between gap-4 shadow-xl">
-          <div className="flex items-center gap-3.5 w-full sm:w-auto">
-            <div className="p-2 rounded-xl bg-brand-cyan/10 border border-brand-cyan/20 flex items-center justify-center">
-              <Cpu className={`w-4 h-4 ${consoleSwitchOn ? 'text-brand-cyan animate-pulse' : 'text-slate-600'}`} />
-            </div>
-            
-            <div className="space-y-1">
-              <span className="text-[9px] font-mono uppercase tracking-widest text-slate-500 font-bold block">
-                Sandbox Console Live Transmission
-              </span>
-              
-              {/* Cycling random text row */}
-              <div className="text-xs font-semibold font-mono tracking-tight text-slate-100 flex items-center gap-1.5 h-5">
-                <AnimatePresence mode="wait">
-                  <motion.span
-                    key={randomMsgIdx}
-                    initial={{ opacity: 0, x: -10 }}
-                    animate={{ opacity: 1, x: 0 }}
-                    exit={{ opacity: 0, x: 10 }}
-                    transition={{ duration: 0.18 }}
-                    className={consoleSwitchOn ? "text-brand-cyan" : "text-slate-400"}
-                  >
-                    {randomTexts[randomMsgIdx]}
-                  </motion.span>
-                </AnimatePresence>
-              </div>
-            </div>
-          </div>
-
-          <div className="flex items-center gap-4 w-full sm:w-auto justify-between sm:justify-end">
-            {/* Arrow controllers to switch random text logs */}
-            <div className="flex items-center gap-1 bg-slate-900 rounded-lg p-0.5 border border-white/5">
-              <button
-                onClick={handlePrevMessage}
-                className="p-1 px-2 text-xs font-mono text-slate-400 hover:text-white hover:bg-slate-800 rounded transition-colors cursor-pointer"
-                title="Previous message"
-              >
-                &larr;
-              </button>
-              <span className="text-[10px] font-mono font-bold text-slate-600 px-1 select-none">
-                {randomMsgIdx + 1}/{randomTexts.length}
-              </span>
-              <button
-                onClick={handleNextMessage}
-                className="p-1 px-2 text-xs font-mono text-slate-400 hover:text-white hover:bg-slate-800 rounded transition-colors cursor-pointer"
-                title="Next message"
-              >
-                &rarr;
-              </button>
-            </div>
-
-            {/* Glowing cyberpunk switch toggle */}
-            <div className="flex items-center gap-2">
-              <span className="text-[10px] font-mono uppercase tracking-widest font-bold text-slate-500">
-                {consoleSwitchOn ? "Active" : "Muted"}
-              </span>
-              
-              <button
-                type="button"
-                onClick={() => setConsoleSwitchOn(!consoleSwitchOn)}
-                className={`w-11 h-6 rounded-full p-0.5 transition-colors duration-200 focus:outline-none cursor-pointer ${
-                  consoleSwitchOn ? 'bg-brand-cyan shadow-[0_0_8px_rgba(6,182,212,0.4)]' : 'bg-slate-800'
-                }`}
-              >
-                <div
-                  className={`w-5 h-5 rounded-full bg-slate-950 transition-transform duration-200 flex items-center justify-center border border-white/10 ${
-                    consoleSwitchOn ? 'translate-x-5' : 'translate-x-0'
-                  }`}
-                >
-                  <div className={`w-1.5 h-1.5 rounded-full ${consoleSwitchOn ? 'bg-brand-cyan animate-ping' : 'bg-slate-600'}`} />
-                </div>
-              </button>
-            </div>
-          </div>
-        </div>
-
         <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 pt-2">
           <div>
             <h2 className="font-display font-bold text-2xl sm:text-3xl text-white tracking-tight">Browse by Creative Category</h2>

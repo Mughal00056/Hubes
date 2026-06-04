@@ -29,7 +29,6 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenCart }) => {
   const navigate = useNavigate();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [profileOpen, setProfileOpen] = useState(false);
-  const [notificationsOpen, setNotificationsOpen] = useState(false);
   const [fundsModalOpen, setFundsModalOpen] = useState(false);
   const [addAmount, setAddAmount] = useState('50');
 
@@ -44,7 +43,6 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenCart }) => {
   const [customDescription, setCustomDescription] = useState('');
 
   const profileRef = useRef<HTMLDivElement>(null);
-  const notifRef = useRef<HTMLDivElement>(null);
 
   // Close dropdowns on outside click
   useEffect(() => {
@@ -52,15 +50,11 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenCart }) => {
       if (profileRef.current && !profileRef.current.contains(event.target as Node)) {
         setProfileOpen(false);
       }
-      if (notifRef.current && !notifRef.current.contains(event.target as Node)) {
-        setNotificationsOpen(false);
-      }
     }
     document.addEventListener('mousedown', handleClickOutside);
     return () => document.removeEventListener('mousedown', handleClickOutside);
   }, []);
 
-  const unreadCount = notifications.filter(n => !n.isRead).length;
   const cartItemCount = cart.length;
 
   const handleAddFundsSubmit = (e: React.FormEvent) => {
@@ -262,95 +256,11 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenCart }) => {
                 )}
               </button>
 
-              {/* Notifications Center */}
-              <div ref={notifRef} className="relative">
-                <button
-                  onClick={() => {
-                    setNotificationsOpen(!notificationsOpen);
-                    setProfileOpen(false);
-                  }}
-                  className="relative p-2 rounded-xl text-slate-400 hover:text-slate-200 hover:bg-slate-800/50 light:hover:bg-slate-200/50 dark:hover:bg-slate-800/50 transition-colors"
-                  title="Notifications HUB"
-                >
-                  <Bell className="w-[18px] h-[18px]" />
-                  {unreadCount > 0 && (
-                    <span className="absolute top-1.5 right-1.5 flex h-2 w-2 rounded-full bg-emerald-400 ring-2 ring-slate-950" />
-                  )}
-                </button>
-
-                <AnimatePresence>
-                  {notificationsOpen && (
-                    <motion.div
-                      initial={{ opacity: 0, y: 15, scale: 0.95 }}
-                      animate={{ opacity: 1, y: 0, scale: 1 }}
-                      exit={{ opacity: 0, y: 10, scale: 0.95 }}
-                      className="absolute right-0 mt-2 w-80 sm:w-96 rounded-xl border border-white/8 dark:border-white/8 light:border-slate-200 glass-panel shadow-2xl p-4 text-slate-100 dark:text-slate-100 light:text-slate-800 overflow-hidden"
-                    >
-                      <div className="flex items-center justify-between border-b border-white/10 dark:border-white/10 light:border-slate-200 pb-3">
-                        <div className="flex items-center gap-1.5">
-                          <Bell className="w-4 h-4 text-brand-purple" />
-                          <span className="font-semibold text-sm">Notifications ({unreadCount})</span>
-                        </div>
-                        <div className="flex gap-2">
-                          <button
-                            onClick={markAllNotificationsRead}
-                            className="text-[10px] font-semibold text-brand-cyan hover:underline hover:text-brand-purple cursor-pointer"
-                          >
-                            Read All
-                          </button>
-                          <span className="text-white/10">|</span>
-                          <button
-                            onClick={clearAllNotifications}
-                            className="text-[10px] font-semibold text-rose-400 hover:underline hover:text-rose-300 cursor-pointer"
-                          >
-                            Clear
-                          </button>
-                        </div>
-                      </div>
-
-                      <div className="mt-3 max-h-64 overflow-y-auto space-y-2.5 pr-1">
-                        {notifications.length === 0 ? (
-                          <div className="py-8 text-center text-slate-500 text-xs">
-                            <Check className="w-5 h-5 mx-auto mb-1 text-slate-600" />
-                            No notifications in sight.
-                          </div>
-                        ) : (
-                          notifications.map((notif) => (
-                            <div
-                              key={notif.id}
-                              onClick={() => markNotificationRead(notif.id)}
-                              className={`p-2.5 rounded-lg border leading-tight transition-all duration-150 cursor-pointer text-xs ${
-                                notif.isRead
-                                  ? 'bg-transparent border-transparent opacity-60'
-                                  : 'bg-white/5 border-white/5 dark:bg-white/3 dark:border-white/5 light:bg-slate-200/30 light:border-slate-200/50 hover:bg-white/10'
-                              }`}
-                            >
-                              <div className="flex items-center justify-between gap-1.5">
-                                <span className={`font-semibold ${notif.isRead ? 'text-slate-400' : 'text-slate-200 dark:text-slate-200 light:text-slate-900'}`}>
-                                  {notif.title}
-                                </span>
-                                <span className="text-[9px] text-slate-500 flex-shrink-0">
-                                  {new Date(notif.timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
-                                </span>
-                              </div>
-                              <p className="mt-1 text-slate-400 dark:text-slate-400 light:text-slate-600 text-[11px] leading-relaxed">
-                                {notif.message}
-                              </p>
-                            </div>
-                          ))
-                        )}
-                      </div>
-                    </motion.div>
-                  )}
-                </AnimatePresence>
-              </div>
-
               {/* User Dropdown Profile with Balance Control */}
               <div ref={profileRef} className="relative">
                 <button
                   onClick={() => {
                     setProfileOpen(!profileOpen);
-                    setNotificationsOpen(false);
                   }}
                   className="flex items-center gap-1.5 p-1 rounded-xl hover:bg-slate-800/40 dark:hover:bg-slate-800/40 light:hover:bg-slate-200/50 transition-colors cursor-pointer"
                 >

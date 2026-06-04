@@ -188,17 +188,6 @@ export const Dashboard: React.FC = () => {
                 <ShieldCheck className="w-4 h-4" /> Password Security
               </button>
 
-              <button
-                onClick={() => handleTabChange('notifications')}
-                className={`py-2 px-3 rounded-lg text-left font-semibold flex items-center gap-2 cursor-pointer transition-colors ${
-                  activeTab === 'notifications'
-                    ? 'bg-brand-purple/15 text-brand-purple'
-                    : 'text-slate-400 hover:text-slate-200 hover:bg-white/5'
-                }`}
-              >
-                <Bell className="w-4 h-4" /> Notification Logs
-              </button>
-
             </div>
           </div>
 
@@ -467,63 +456,6 @@ export const Dashboard: React.FC = () => {
                       Update Password
                     </button>
                   </form>
-                </motion.div>
-              )}
-
-              {/* TAB 4: EXPANDED DETAILED NOTIFICATION CENTER LOGS */}
-              {activeTab === 'notifications' && (
-                <motion.div
-                  key="notifications"
-                  initial={{ opacity: 0, x: 10 }}
-                  animate={{ opacity: 1, x: 0 }}
-                  exit={{ opacity: 0, x: -10 }}
-                  className="rounded-xl border border-white/8 bg-slate-900/30 backdrop-blur-md p-5 sm:p-6 space-y-6"
-                >
-                  <div className="flex items-center justify-between border-b border-white/8 pb-2">
-                    <h2 className="font-display font-bold text-lg text-slate-100 flex items-center gap-2">
-                      Notification Logs Manager
-                    </h2>
-                    {notifications.length > 0 && (
-                      <button
-                        onClick={clearAllNotifications}
-                        className="text-[10px] font-bold text-rose-400 hover:underline hover:text-rose-300 flex items-center gap-1 cursor-pointer"
-                      >
-                        <Trash2 className="w-3.5 h-3.5" /> Clear All logs
-                      </button>
-                    )}
-                  </div>
-
-                  <div className="space-y-3.5 divide-y divide-white/[0.04] max-h-[500px] overflow-y-auto pr-1">
-                    {notifications.length === 0 ? (
-                      <p className="text-slate-500 italic text-center py-12 text-xs">No notifications are logged inside standard workspace history.</p>
-                    ) : (
-                      notifications.map((notif) => (
-                        <div
-                          key={notif.id}
-                          onClick={() => markNotificationRead(notif.id)}
-                          className={`p-3 rounded-xl border flex gap-3 text-xs leading-relaxed transition-all cursor-pointer ${
-                            notif.isRead
-                              ? 'border-transparent bg-transparent opacity-60'
-                              : 'border-white/5 bg-white/5 dark:bg-white/3 dark:border-white/5 hover:bg-white/10'
-                          }`}
-                        >
-                          <div className={`w-2 h-2 rounded-full mt-1.5 flex-shrink-0 ${notif.isRead ? 'bg-transparent' : 'bg-brand-cyan'}`} />
-                          
-                          <div className="flex-grow">
-                            <div className="flex items-center justify-between gap-1.5">
-                              <span className="font-bold text-slate-100">{notif.title}</span>
-                              <span className="text-[9px] font-mono text-slate-500">
-                                {new Date(notif.timestamp).toLocaleString([], { month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' })}
-                              </span>
-                            </div>
-                            <p className="mt-1 text-slate-400 text-[11px] leading-relaxed">
-                              {notif.message}
-                            </p>
-                          </div>
-                        </div>
-                      ))
-                    )}
-                  </div>
                 </motion.div>
               )}
 
